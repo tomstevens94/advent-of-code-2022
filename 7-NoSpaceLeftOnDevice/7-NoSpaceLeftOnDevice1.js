@@ -92,8 +92,6 @@ while (currentLine < lines.length) {
         directoryPaths.push(currentPath ? `${currentPath}.${key}` : key);
       });
 
-      // console.log(dirKeys);
-
       const files = listedInfo.filter(e => e.slice(0, 3) !== 'dir').map(e => e.split(' ')[0]);
 
       if (files.length > 0) {
@@ -111,6 +109,7 @@ directoryPaths = directoryPaths.sort((a, b) => b.split('.').length - a.split('.'
 // console.log(directoryPaths.length);
 
 let directorySizes = {};
+let allFiles = 0;
 
 directoryPaths.forEach((path, i) => {
   const splitPath = path.split('.');
@@ -121,6 +120,7 @@ directoryPaths.forEach((path, i) => {
 
   // if (directorySizes[path]) console.log(directorySizes[path]);
   let containedFiles = finalDir.files !== undefined ? finalDir.files.reduce((total, num) => total + Number(num), 0) : 0;
+  allFiles += containedFiles;
 
   const dirKeys = Object.keys(finalDir).filter(e => e !== 'files');
 
@@ -136,21 +136,25 @@ directoryPaths.forEach((path, i) => {
   // }
 });
 
-const totalSpace = 70000000;
-const spaceRequired = 30000000
-// const usedSpace = Math.max(...Object.values(directorySizes));
-const usedSpace = [directorySizes.gbjh, directorySizes.hlpzbht, directorySizes.phpmmtvc, directorySizes.plbjmdl, directorySizes.tggr].reduce((total, num) => total + num, 0);
-const unusedSpace = totalSpace - usedSpace;
-
-const deletionNeeded = spaceRequired - unusedSpace;
-
-console.log(deletionNeeded);
-
-console.log(Object.values(directorySizes).sort((a, b) => a - b).filter(e => e > deletionNeeded)[0]);
-
-const maxSize = 100000;
-const smallDirectories = Object.values(directorySizes).filter(e => Number(e) < maxSize);
-
+// const maxSize = 100000;
+// const smallDirectories = Object.values(directorySizes).filter(e => Number(e) < maxSize);
 // console.log(smallDirectories, smallDirectories.reduce((total, num) => total + num, 0)); // Part 1
 
-// Greater than 3433907
+const totalSpace = 70000000;
+const spaceRequired = 30000000;
+// const usedSpace = Math.max(...Object.values(directorySizes));
+// const usedSpace = [directorySizes.gbjh, directorySizes.hlpzbht, directorySizes.phpmmtvc, directorySizes.plbjmdl, directorySizes.tggr].reduce((total, num) => total + num, 0);
+
+const spaceUsed = lines.filter(e => Number(e.split(' ')[0])).map(e => Number(e.split(' ')[0])).reduce((total, num) => total + num, 0);
+console.log(spaceUsed);
+
+const currentSpace = totalSpace - spaceUsed;
+const deletionNeeded = spaceRequired - currentSpace;
+
+console.log('TOTAL', totalSpace);
+console.log('REQUIRED FOR UPDATE', spaceRequired);
+console.log('CURRENTLY USED', spaceUsed);
+console.log('CURRENT SPACE', currentSpace);
+console.log('DELETION REQUIRED', deletionNeeded);
+
+console.log('DIRECTORY SIZE TO DELETE', Object.values(directorySizes).sort((a, b) => a - b).find(e => e >= deletionNeeded)); // Part 2
