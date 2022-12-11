@@ -42,6 +42,10 @@ let test = {
   }
 }
 
+function log(val) {
+  console.log(util.inspect(val, { showHidden: false, depth: null, colors: true })); // Directory tree created
+}
+
 const path = 'testt.testtt.key';
 
 function assignNestedValue(obj, path, value) { // Used to change values of nested objects
@@ -101,6 +105,8 @@ while (currentLine < lines.length) {
   currentLine = jumpToLine !== -1 && jumpToLine ? jumpToLine : currentLine + 1;
 }
 
+// log(dirTree);
+
 directoryPaths = directoryPaths.sort((a, b) => b.split('.').length - a.split('.').length); // Sort by deepest nested directories first
 // console.log(directoryPaths.length);
 
@@ -123,17 +129,28 @@ directoryPaths.forEach((path, i) => {
 
   directorySizes[path] = totalSize;
 
-  if (i > 178) {
-    console.log(path, containedFiles, containedDirs, dirKeys);
-    log(finalDir);
-    console.log('----------------------------------')
-  }
+  // if (i > 178) {
+  //   console.log(path, containedFiles, containedDirs, dirKeys);
+  //   log(finalDir);
+  //   console.log('----------------------------------')
+  // }
 });
 
-const maxSize = 100000;
-const smallDirectories = Object.values(directorySizes).filter(e => Number(e) < maxSize)
-console.log(smallDirectories, smallDirectories.reduce((total, num) => total + num, 0));
+const totalSpace = 70000000;
+const spaceRequired = 30000000
+// const usedSpace = Math.max(...Object.values(directorySizes));
+const usedSpace = [directorySizes.gbjh, directorySizes.hlpzbht, directorySizes.phpmmtvc, directorySizes.plbjmdl, directorySizes.tggr].reduce((total, num) => total + num, 0);
+const unusedSpace = totalSpace - usedSpace;
 
-function log(val) {
-  console.log(util.inspect(val, { showHidden: false, depth: null, colors: true })); // Directory tree created
-}
+const deletionNeeded = spaceRequired - unusedSpace;
+
+console.log(deletionNeeded);
+
+console.log(Object.values(directorySizes).sort((a, b) => a - b).filter(e => e > deletionNeeded)[0]);
+
+const maxSize = 100000;
+const smallDirectories = Object.values(directorySizes).filter(e => Number(e) < maxSize);
+
+// console.log(smallDirectories, smallDirectories.reduce((total, num) => total + num, 0)); // Part 1
+
+// Greater than 3433907
