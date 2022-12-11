@@ -142,11 +142,8 @@ directoryPaths.forEach((path, i) => {
 
 const totalSpace = 70000000;
 const spaceRequired = 30000000;
-// const usedSpace = Math.max(...Object.values(directorySizes));
-// const usedSpace = [directorySizes.gbjh, directorySizes.hlpzbht, directorySizes.phpmmtvc, directorySizes.plbjmdl, directorySizes.tggr].reduce((total, num) => total + num, 0);
 
 const spaceUsed = lines.filter(e => Number(e.split(' ')[0])).map(e => Number(e.split(' ')[0])).reduce((total, num) => total + num, 0);
-console.log(spaceUsed);
 
 const currentSpace = totalSpace - spaceUsed;
 const deletionNeeded = spaceRequired - currentSpace;
