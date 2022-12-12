@@ -136,6 +136,8 @@ directoryPaths.forEach((path, i) => {
   // }
 });
 
+console.log(directorySizes);
+
 // const maxSize = 100000;
 // const smallDirectories = Object.values(directorySizes).filter(e => Number(e) < maxSize);
 // console.log(smallDirectories, smallDirectories.reduce((total, num) => total + num, 0)); // Part 1
