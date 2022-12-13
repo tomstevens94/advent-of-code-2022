@@ -1,5 +1,4 @@
 {
-<<<<<<< Updated upstream
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
@@ -16,22 +15,4 @@
       "program": "${workspaceFolder}/10-CathodeRayTube/10-CathodeRayTube2.js"
     }
   ]
-=======
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "console": "integratedTerminal",
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\13-DistressSignal\\13-DistressSignal1.js"
-        }
-    ]
->>>>>>> Stashed changes
 }
