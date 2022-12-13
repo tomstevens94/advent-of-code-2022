@@ -30,7 +30,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\11-MonkeyInTheMiddle\\11-MonkeyInTheMiddle1.js"
+            "program": "${workspaceFolder}\\13-DistressSignal\\13-DistressSignal1.js"
         }
     ]
 >>>>>>> Stashed changes
