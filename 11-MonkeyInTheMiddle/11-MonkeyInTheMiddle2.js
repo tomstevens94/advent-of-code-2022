@@ -27,14 +27,14 @@ for (let i = 0; i < lines.length; i += 7) {
 
     monkey = monkey.forEach((e, i) => {
         switch (i) {
-            case 1: obj.heldItems = e.replace('Starting items: ', '').split(', ').map(e => Number(e)); return;
+            case 1: obj.heldItems = e.replace('Starting items: ', '').split(', ').map(e => BigInt(e)); return;
             case 2: {
-                obj.operation.type = e.split(' ')[6]; 
-                const value = Number(obj.operation.value = e.split(' ')[7].trim()) || 'oldValue'
-                obj.operation.value = value; 
+                obj.operation.type = e.split(' ')[6];
+                const value = Number(e.split(' ')[7].trim());
+                obj.operation.value = value ? BigInt(value) : 'oldValue'; 
                 return;
             }
-            case 3: obj.divisibleTest = Number(e.replace('Test: divisible by ', ''))
+            case 3: obj.divisibleTest = BigInt(e.replace('Test: divisible by ', ''));
             case 4: obj.trueThrow = Number(e.replace('If true: throw to monkey ', ''));
             case 5: obj.falseThrow = Number(e.replace('If false: throw to monkey ', ''));
         }
@@ -46,7 +46,7 @@ let inspections = {};
 
 monkeys.forEach((_, i) => inspections[i] = 0);
 
-for (let i = 0; i < 10000; i++) {
+for (let i = 0; i < 100; i++) {
     monkeys.forEach((monkey, i) => {
         if (!monkey.heldItems.length) return;
 
@@ -55,10 +55,10 @@ for (let i = 0; i < 10000; i++) {
             inspections[i] += 1;
 
             const adjValue = value === 'oldValue' ? worry : value;
+            
             let newWorry = operType === '*' ? worry * adjValue : worry + adjValue;
-            // newWorry = Math.floor(newWorry / 3);
 
-            const testIsTrue = newWorry % monkey.divisibleTest === 0;
+            const testIsTrue = newWorry % adjValue == 0;
             if (testIsTrue) {
                 monkeys[monkey.trueThrow].heldItems.push(newWorry);
             } else {
@@ -70,8 +70,9 @@ for (let i = 0; i < 10000; i++) {
     });
 }
 
-// console.log(monkeys)
+console.log(monkeys)
 // console.log(inspections);
 console.log(Object.values(inspections).sort((a, b) => b - a).slice(0, 2).reduce((total, num) => total * num, 1)); // Part 1
 
 // < 14391121333
+// not 14398800024
