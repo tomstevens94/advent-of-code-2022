@@ -1,5 +1,4 @@
 {
-<<<<<<< Updated upstream
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
@@ -13,9 +12,10 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/10-CathodeRayTube/10-CathodeRayTube2.js"
+      "program": "${workspaceFolder}/13-DistressSignal/13-DistressSignal1.js"
     }
   ]
+<<<<<<< HEAD
 =======
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
@@ -34,4 +34,6 @@
         }
     ]
 >>>>>>> Stashed changes
+=======
+>>>>>>> 66a5c10810b2a7ff5cf7abc2ac5e457146e5eca9
 }

@@ -13,17 +13,17 @@ const lines = input.split('\n');
 const monkeys = [];
 
 for (let i = 0; i < lines.length; i += 7) {
-    let monkey = lines.slice(i, i + 6);
-    let obj = {
-        heldItems: [],
-        operation: {
-            type: '',
-            value: 0
-        },
-        divisibleTest: 0,
-        trueThrow: 0,
-        falseThrow: 0
-    };
+  let monkey = lines.slice(i, i + 6);
+  let obj = {
+    heldItems: [],
+    operation: {
+      type: '',
+      value: 0
+    },
+    divisibleTest: 0,
+    trueThrow: 0,
+    falseThrow: 0
+  };
 
     monkey = monkey.forEach((e, i) => {
         switch (i) {
@@ -50,9 +50,9 @@ for (let i = 0; i < 100; i++) {
     monkeys.forEach((monkey, i) => {
         if (!monkey.heldItems.length) return;
 
-        const {type: operType, value} = monkey.operation;
-        monkey.heldItems.forEach((worry) => {
-            inspections[i] += 1;
+    const { type: operType, value } = monkey.operation;
+    monkey.heldItems.forEach((worry) => {
+      inspections[i] += 1;
 
             const adjValue = value === 'oldValue' ? worry : value;
             
@@ -68,6 +68,9 @@ for (let i = 0; i < 100; i++) {
 
         monkey.heldItems = [];
     });
+
+    monkey.heldItems = [];
+  });
 }
 
 console.log(monkeys)

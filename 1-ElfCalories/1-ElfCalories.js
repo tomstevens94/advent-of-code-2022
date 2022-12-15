@@ -1,7 +1,7 @@
 var fs = require('fs');
 
 require.extensions['.txt'] = function (module, filename) {
-    module.exports = fs.readFileSync(filename, 'utf8');
+  module.exports = fs.readFileSync(filename, 'utf8');
 };
 
 const words = require("./input.txt");
@@ -13,4 +13,3 @@ const caloriesPerElf = words.split('\n\r').map(e => e.split('\n').reduce((total,
 const topThreeElves = caloriesPerElf.sort((a, b) => b - a).slice(0, 3);
 
 // console.log(topThreeElves.reduce((total, num) => total + num, 0)); // Part 2
-
