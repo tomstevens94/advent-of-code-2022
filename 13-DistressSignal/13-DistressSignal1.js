@@ -1,3 +1,12 @@
+// function getInput() { 
+//   return fetch('13-DistressSignal/input.txt')
+//   .then(r => r.text())
+//   .then(input => {
+//     return input
+//   })
+// }
+
+
 var fs = require('fs');
 
 require.extensions['.txt'] = function (module, filename) {
@@ -5,6 +14,7 @@ require.extensions['.txt'] = function (module, filename) {
 };
 
 const input = require("./input.txt");
+// const input = await getInput();
 
 // let pairs = input.split('\n\n').map(pair => pair.split('\n'));
 let pairs = input.split('\n\r');
@@ -14,6 +24,8 @@ pairs = pairs.map(e => e.split('\n').map(e1 => e1.replace('\r', '')).filter(e2 =
 pairs = pairs.map((pair) => {
   return pair.map(e => JSON.parse(e));
 })
+
+console.log(pairs);
 
 let correctPairs = [];
 
@@ -130,8 +142,9 @@ function compareLists(left, right) { // Return boolean value
       console.log('ARRAYS TEST COMPARING INTEGERS')
 
       let integerComparison = compareIntegers(leftItem, rightItem);
+      console.log('integerComparison', integerComparison)
       if (integerComparison === undefined) {
-        if (i === length - 1) return undefined;
+        // if (i === length - 1) return undefined;
         continue;
       };
       return integerComparison;
@@ -141,8 +154,9 @@ function compareLists(left, right) { // Return boolean value
       console.log('BOTH ARE ARRAYS AGAIN, RECURSIVE TEST');
 
       let arrayComparison = compareLists(leftItem, rightItem)
+      console.log('arrayComparison', arrayComparison)
       if (arrayComparison === undefined) {
-        if (i === length - 1) return undefined;
+        // if (i === length - 1) return undefined;
         continue;
       }
       return arrayComparison;
@@ -152,8 +166,10 @@ function compareLists(left, right) { // Return boolean value
       console.log('ARRAYS TEST DIFFERENT TYPES')
 
       let integerComparison = compareDifferentTypes(leftItem, rightItem);
+      console.log('integerComparison', integerComparison)
       if (integerComparison === undefined) {
         if (i === length - 1) return undefined;
+        console.log('continuing')
         continue;
       };
       return integerComparison;
