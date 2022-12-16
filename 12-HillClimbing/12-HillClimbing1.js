@@ -37,12 +37,6 @@ class Node {
   }
 }
 
-// const test = [new Node(3, 12), new Node(3, 11), new Node(3, 10)];
-
-// let testNode = test.find(node => node.y === 11);
-// testNode.x = 5;
-// console.log(test, testNode)
-
 const openNodes = []; // Nodes with a calculated F cost;
 const closedNodes = []; // Nodes with calculated neighbours
 
@@ -90,15 +84,15 @@ while (!currentNode.sameLocation(endNode)) {
       return !isClosed && !invalidHeight;
     }); 
 
-  neighbours.forEach(node => {
+  neighbours.forEach(node => { // These are all valid neighbours
     const gCost = currentNode.gCost + 1;
 
     let openNeighbour = openNodes.find(node1 => node1.sameLocation(node));
     const pathIsLonger = openNeighbour && openNeighbour.gCost < gCost;
 
-    if (openNeighbour && pathIsLonger) return; // We already have a better path calculated, return
+    if (openNeighbour && pathIsLonger) return; // This node already has a better path calculated
 
-    if (openNeighbour === undefined) { // If neighbour was not in open array, we set it to neighbour, and add it to array
+    if (openNeighbour === undefined) { // If node did not already exist, we set it to active neighbour, and add it to array
       openNeighbour = node;
       openNodes.push(openNeighbour);
     }

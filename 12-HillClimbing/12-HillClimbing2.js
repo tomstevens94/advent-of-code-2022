@@ -38,9 +38,6 @@ class Node {
   }
 }
 
-// const startY = rows.findIndex(e => e.includes('S')); // Get coordinates for start node
-// const startX = rows[startY].split('').findIndex(e => e === 'S');
-
 const endY = rows.findIndex(e => e.includes('E')); // Get coordinates for end node
 const endX = rows[endY].split('').findIndex(e => e === 'E');
 
@@ -48,7 +45,7 @@ rows = rows.map(row => row.replace('S', 'a').replace('E', 'z')); // Change start
 
 // Start with array of coordinates and map them to smallest step values, then choose smallest value in array
 let startCoordinates = [];
-rows.forEach((row, y) => row.split('').forEach((h, x) => {if (h === 'a') startCoordinates.push([x, y])}))
+rows.forEach((row, y) => row.split('').forEach((h, x) => {if (h === 'a') startCoordinates.push([x, y])})); // All possible start coordinates
 
 startCoordinates = startCoordinates.map(([x, y]) => {
   const openNodes = []; // Nodes with a calculated F cost;
@@ -69,10 +66,14 @@ startCoordinates = startCoordinates.map(([x, y]) => {
     currentNode = sortedNodes.splice(0, 1)[0]; // Remove first node from open array (lowest F cost)
     closedNodes.push(currentNode); // Add node to closed list
 
-    if (!currentNode) {
+    if (!currentNode) { // We are stuck somewhere we can't leave due to elevation
       return undefined;
     }
-    if (currentNode.sameLocation(endNode)) console.log('PATH FOUND'); // If current is in same location as end node, then the path has been found
+
+    if (currentNode.sameLocation(endNode)) {
+      console.log('PATH FOUND'); // If current is in same location as end node, then the path has been found
+      continue;
+    }
 
     // Find all neighbours
     let {x, y} = currentNode; // Coordinates of current node
@@ -86,22 +87,22 @@ startCoordinates = startCoordinates.map(([x, y]) => {
 
     neighbours = neighbours
       .filter(([x, y]) => (x >= 0 && x < rows[0].length && y >= 0 && y < rows.length)) // Valid coordinates
-      .map(([x, y]) => new Node(x, y)) // Convert coordinates to Nodes
+      .map(([x, y]) => new Node(x, y)) // Convert coordinates to nodes
       .filter(node => {
         const isClosed = closedNodes.some(node1 => node1.sameLocation(node)) // Remove node if it is in closed array
         const invalidHeight = node.height > currentNode.height + 1; // Remove node if height is too high
         return !isClosed && !invalidHeight;
       }); 
 
-    neighbours.forEach(node => {
+    neighbours.forEach(node => { // These are all valid neighbours
       const gCost = currentNode.gCost + 1;
 
       let openNeighbour = openNodes.find(node1 => node1.sameLocation(node));
       const pathIsLonger = openNeighbour && openNeighbour.gCost < gCost;
 
-      if (openNeighbour && pathIsLonger) return; // We already have a better path calculated, return
+      if (openNeighbour && pathIsLonger) return; // We already have a better path calculated for this node
 
-      if (openNeighbour === undefined) { // If neighbour was not in open array, we set it to neighbour, and add it to array
+      if (openNeighbour === undefined) { // If node does not already exist, we set it to active neighbour, and add it to array
         openNeighbour = node;
         openNodes.push(openNeighbour);
       }
@@ -122,10 +123,10 @@ startCoordinates = startCoordinates.map(([x, y]) => {
   return steps;
 });
 
-const startingLength = startCoordinates.length;
-startCoordinates = startCoordinates.filter(e => e !== undefined);
-const shortestPath = startCoordinates.sort((a, b) => a - b)[0];
+const startingLength = startCoordinates.length; // Includes undefined values
+startCoordinates = startCoordinates.filter(e => e !== undefined); // Successful paths
+const shortestPath = startCoordinates.sort((a, b) => a - b)[0]; // Shortest path
 
-console.log('STARTING LENGTH', startingLength); // Part 2
+console.log('STARTING LENGTH', startingLength);
 console.log('FILTERED LENGTH', startCoordinates.length);
-console.log('SHORTEST PATH', shortestPath);
+console.log('SHORTEST PATH', shortestPath); // Part 2
