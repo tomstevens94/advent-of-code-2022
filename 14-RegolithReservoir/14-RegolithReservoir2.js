@@ -9,12 +9,10 @@ const input = require("./input.txt");
 let rows = input.split('\n');
 rows = rows.map(row => row.split(' -> ').map(coor => coor.split(',').map(e => Number(e)))); // Convert to array of points , each are array of coordinates, each are array of length 2: X and Y (Both numbers - not strings!)
 
-// console.log(rows)
-
-let xMin = Math.min(...rows.map(row => Math.min(...row.map(e => e[0])))) - 10; // Smallest X value, value added to give space around rock
+let xMin = Math.min(...rows.map(row => Math.min(...row.map(e => e[0])))) - 35; // Smallest X value, value added to give space around rock
 let yMin = Math.min(...rows.map(row => Math.min(...row.map(e => e[1])))); // Smallest Y value
-let xMax = Math.max(...rows.map(row => Math.max(...row.map(e => e[0])))) + 5; // Largest X value, value added to give space around rock
-let yMax = Math.max(...rows.map(row => Math.max(...row.map(e => e[1])))) + 10; // Largest Y value
+let xMax = Math.max(...rows.map(row => Math.max(...row.map(e => e[0])))) + 150; // Largest X value, value added to give space around rock
+let yMax = Math.max(...rows.map(row => Math.max(...row.map(e => e[1])))) + 2; // Largest Y value
 
 console.log('xMin', xMin);
 console.log('yMin', yMin);
@@ -34,12 +32,12 @@ rows.forEach((row) => { // Draw rock on grid
   let previousPoint;
 
   row.forEach(point => {
-    if (!previousPoint) { // On first point, set previous to current and return
+    if (!previousPoint) { // On first point, set previous to current
       previousPoint = point;
-      let adjX = previousPoint[0] - xMin;
+      let adjX = previousPoint[0] - xMin; // Adjust X coordinate to match input
       let adjY = previousPoint[1];
 
-      grid[adjY][adjX] = '#';
+      grid[adjY][adjX] = '#'; // Draw rock on this point as this will be moved in net step before drawing
       return;
     }
 
@@ -57,42 +55,34 @@ rows.forEach((row) => { // Draw rock on grid
   })
 });
 
-const sandStart = [500 - xMin, 0];
+grid[grid.length - 1].fill('#'); // Add floor to bottom of grid
+
+const sandStart = [500 - xMin, 0]; // Start location of sand
 
 let totalGrains = 0;
-let fallingIntoVoid = false;
+let sourceIsBlocked = false;
 
-while (!fallingIntoVoid) {
-  totalGrains++;
+while (!sourceIsBlocked) { // Keep adding sand until the source is blocked
+  totalGrains++; // Keep track of the amount of grains added
   addSand();
 }
 
-grid.forEach(row => console.log(row.join('')));
-console.log(`Total grains rested beore falling into void: ${totalGrains}`); // Part 1
+grid.forEach(row => console.log(row.join(''))); // Log the entire cave
 
 function addSand() {
-  let sand = sandStart;
+  let sand = sandStart; // Initialise first location of sand
 
-  while (canFallFurther(sand)) {
+  while (canFallFurther(sand)) { // Keep moving sand downwards until it cant fall further
     sand = dropSand(sand);
   }
 
-  grid[sand[1]][sand[0]] = 'o';
+  grid[sand[1]][sand[0]] = 'o'; // Add sand to grid
 }
 
 function dropSand([x, y]) {
-  if (x === 0) { // Sand is on left edge
-    if (grid[y + 1][x] === '.') { // Space below
-      return [x, y + 1];
-    } else if (grid[y + 1][x + 1] === '.') { // Space below-right
-      return [x + 1, y + 1];
-    }
-  } else if (x === grid[0].length - 1) { // Sand is on right edge
-    if (grid[y + 1][x] === '.') { // Space below
-      return [x, y + 1];
-    } else if (grid[y + 1][x - 1] === '.') { // Space below-left
-      return [x - 1, y + 1];
-    }
+  if (x === 0 || x === grid[0].length - 1) { // Sand is on edge - grid needs to be made wider
+    console.log('GRID ISNT WIDE ENOUGH');
+    return [x, y];
   }
 
   const spaceBelow = grid[y + 1][x] === '.';
@@ -108,26 +98,20 @@ function dropSand([x, y]) {
 }
 
 function canFallFurther([x, y]) {
-  if (y === grid.length - 1) {
-    fallingIntoVoid = true; // Sand has reached the bottom of the screen
-    console.log(`The ${totalGrains} grain fell into the void`);
-    totalGrains--; // Remove one from total grains as the most recent one fell into the void
-    return false;
-  }
-
-  if (x === 0) { // Sand is on left edge
-    if (grid[y + 1][x] === '.' || grid[y + 1][x + 1] === '.') { // Space below or below-right
-      return true;
-    } else return false;
-  } else if (x === grid[0].length - 1) { // Sand is on right edge
-    if (grid[y + 1][x] === '.' || grid[y + 1][x - 1] === '.') { // Space below or below-left
-      return true;
-    } else return false;
-  }
-
   const spaceBelow = grid[y + 1][x] === '.';
   const spaceBelowLeft = grid[y + 1][x - 1] === '.';
   const spaceBelowRight = grid[y + 1][x + 1] === '.';
+
+  if ([x, y].every((e, i) => sandStart[i] === e) && !spaceBelow && !spaceBelowLeft & !spaceBelowRight) { // Source has been blocked
+    sourceIsBlocked = true;
+    console.log(`The ${totalGrains} grain blocked the source`); // Part 2
+    return false;
+  }
+
+  if (x === 0 || x === grid[0].length - 1) { // Sand is on one of the edges - grid needs to be made wider
+    console.log('GRID ISNT WIDE ENOUGH');
+    return false;
+  }
 
   return (spaceBelow || spaceBelowLeft || spaceBelowRight);
 }

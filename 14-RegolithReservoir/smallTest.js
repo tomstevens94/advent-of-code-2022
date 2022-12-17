@@ -4,14 +4,14 @@ require.extensions['.txt'] = function (module, filename) {
   module.exports = fs.readFileSync(filename, 'utf8');
 };
 
-const input = require("./input.txt");
+const input = require("./smallInput.txt");
 
 let rows = input.split('\n');
 rows = rows.map(row => row.split(' -> ').map(coor => coor.split(',').map(e => Number(e)))); // Convert to array of points , each are array of coordinates, each are array of length 2: X and Y (Both numbers - not strings!)
 
-// console.log(rows)
+console.log(rows)
 
-let xMin = Math.min(...rows.map(row => Math.min(...row.map(e => e[0])))) - 10; // Smallest X value, value added to give space around rock
+let xMin = Math.min(...rows.map(row => Math.min(...row.map(e => e[0])))) - 1; // Smallest X value, value added to give space around rock
 let yMin = Math.min(...rows.map(row => Math.min(...row.map(e => e[1])))); // Smallest Y value
 let xMax = Math.max(...rows.map(row => Math.max(...row.map(e => e[0])))) + 5; // Largest X value, value added to give space around rock
 let yMax = Math.max(...rows.map(row => Math.max(...row.map(e => e[1])))) + 10; // Largest Y value
@@ -68,7 +68,9 @@ while (!fallingIntoVoid) {
 }
 
 grid.forEach(row => console.log(row.join('')));
-console.log(`Total grains rested beore falling into void: ${totalGrains}`); // Part 1
+console.log(`Total grains rested beore falling into void: ${totalGrains}`);
+
+// not: 1299 1298
 
 function addSand() {
   let sand = sandStart;
