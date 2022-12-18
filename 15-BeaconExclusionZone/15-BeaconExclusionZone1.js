@@ -28,11 +28,14 @@ let sensors = rows.map(input => { // Create array of sensor objects
   }
 })
 
-const yToCheck = 2000000; // Position of line - check how many points cannot be a beacon
 
 sensors = sensors.sort((a, b) => a.position.x - b.position.x); // Sort sensors by X position
 
-let beaconFreePoints = new Set(); // Points that can't be a beacon - possibly optimise this to store ranges instead of points?
+const yToCheck = 2000000; // Position of line - check how many points cannot be a beacon
+
+let overlapRanges = [];
+
+// Each sensor has a diamond shaped area it scans, that spans to its nearest beacon. The beacon is always on the edge of this diamond, so none of the internal points within the diamond can possibly contain another beacon
 
 sensors.forEach((sensor, i) => {
   const distanceToLine = Math.abs(yToCheck - sensor.position.y); // Vertical distance to line
@@ -44,21 +47,29 @@ sensors.forEach((sensor, i) => {
     console.log(`Sensor ${i} does not overlap the line`);
     return;
   }
-  if (overlap === 0) { // Sensor can detect exactly up to the line
-    beaconFreePoints.add(sensor.position.x); // Sensor overlaps only at this one point
-    return;
-  }
-  let pointsMin = sensor.position.x - overlap; // Left-most point of detection on the line
+  const pointsMin = sensor.position.x - overlap; // Left-most point of detection on the line
   const pointsMax = sensor.position.x + overlap; // Right-most point of detection on the line
-  while (pointsMin < pointsMax) { // Add all points to set
-    beaconFreePoints.add(pointsMin);
-    pointsMin++;
-  }
-  beaconFreePoints.add(pointsMin); // Add final point to set
-  if (sensor.closestBeacon.y === yToCheck) { // If beacon is on the line, remove it from the array
-    console.log('REMOVED BEACON', sensor.closestBeacon);
-    beaconFreePoints.delete(sensor.closestBeacon.x);
+  const range = [pointsMin, pointsMax]; // Range of points on line that sensor is covering
+
+  let overlappingIndex = overlapRanges.findIndex(e => e[1] >= range[0] && e[0] <= range[1]); // Index of a possible overlapping range
+  if (overlappingIndex !== -1) {
+    const overlappingRange = overlapRanges[overlappingIndex];
+
+    let newRange = [Math.min(overlappingRange[0], range[0]), Math.max(overlappingRange[1], range[1])]; // Combination of overlapping ranges
+    overlapRanges[overlappingIndex] = newRange; // Replace existing range to include current range
+  } else {
+    overlapRanges.push(range); // Add range to array
   }
 });
 
-console.log(beaconFreePoints.size); // Part 1
+const beaconsOnLine = new Set(sensors.filter(sensor => sensor.closestBeacon.y === yToCheck).map(sensor => sensor.closestBeacon.x)).size; // X position of each beacon added to set
+
+let beaconFreePoints = overlapRanges.reduce((total, range) => { // Add up all ranges
+  const amount = (range[1] - range[0] + 1); // Total amount covered by range
+
+  return total + amount;
+}, 0) - beaconsOnLine; // Remove beacons that are on the line from the total
+
+console.log(beaconFreePoints); // Part 1
+
+// 5688618
