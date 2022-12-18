@@ -62,7 +62,7 @@ sensors.forEach((sensor, i) => {
   }
 });
 
-const beaconsOnLine = new Set(sensors.filter(sensor => sensor.closestBeacon.y === yToCheck).map(sensor => sensor.closestBeacon.x)).size; // X position of each beacon added to set
+const beaconsOnLine = new Set(sensors.filter(sensor => sensor.closestBeacon.y === yToCheck).map(sensor => sensor.closestBeacon.x)).size; // Total beacons that are on the line
 
 let beaconFreePoints = overlapRanges.reduce((total, range) => { // Add up all ranges
   const amount = (range[1] - range[0] + 1); // Total amount covered by range
