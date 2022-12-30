@@ -1,0 +1,46 @@
+target = 4890
+This should equal 2=-1=0
+This converts to 2 -2 -1 1 -2 0
+
+Convert to base five: 6250 -1250 -125 25 -10 0 - Added together equal 4890
+Whereas Base 10: 10000 1000 100 10 1 - These are column values - Multiply thes by the digits in each column and sum values
+
+target = 4890
+
+Initialise empty digits array
+Loop through power of 5 - [0, 1, 2, 3, 4 etc]
+For each power find the bounds that they can reach, and stop when the target is within these bounds:
+0-1:
+(2 * 1) + (-2 * 1) = between -2 and 2 (We can just calculate the positive bounds as the negative is always the same * -1)
+
+1-5:
+(2 * 5) + bounds of 1 = between -12 and 12
+
+2-25:
+(2 * 25) + bounds of 5 = between -62 and 62
+
+3-125:
+(2 * 125) + bounds of 25 = -312 and 312
+
+4-625:
+(2 * 625) + bounds of 125 = -1562 and 1562
+
+5-3125:
+(2 * 3125) + bounds of 625 = -7812 and 7812 <- Target is within this range
+
+For power 5:
+Loop through all multipliers: [2, 1, 0, -1, -2] and find the one that closest to the target:
+2 * 3125 = 6250 < - This is closest
+1 * 3125 = 3125
+...
+
+Add 2 to digits array:
+If array.length is 0, set the length to current power + 1, and fill with 0's
+
+Set appropriate index to current power
+Appropriate index = (length - 1) - power
+
+Remove result from target
+target = target - (3125 * 2) = 4890 - 6250 = -1360
+
+Repeat until target is 0
